@@ -3,113 +3,120 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap" rel="stylesheet">
 <style>
-@property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
 html,body{margin:0;height:100%;background:transparent;overflow:hidden}
 #stage{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;font-family:'Oswald','Arial Narrow',sans-serif;color:#fff}
-body.bg #stage,body.edit #stage{background:linear-gradient(#1c2b22,#27402f 60%,#1c2b22)}
+body.bg #stage{background:linear-gradient(#1c2b22,#27402f 60%,#1c2b22)}
 .pn{position:absolute;box-sizing:border-box}
-
-/* bingkai utama + kilatan cahaya */
-#fr{border-radius:18px;box-shadow:inset 0 0 28px rgba(255,205,120,.14),0 0 22px rgba(255,205,120,.25)}
-#fr::before,#fr::after{content:"";position:absolute;inset:0;border-radius:18px;padding:5px;
- -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
-#fr::after{background:linear-gradient(135deg,#7a5a22,#f7e6a8 25%,#b08a35 50%,#f7e6a8 75%,#7a5a22)}
-#fr::before{z-index:1;background:conic-gradient(from var(--a),transparent 0 72%,rgba(255,255,255,.15) 80%,#fff 93%,#ffe9a8 96%,transparent 100%);animation:spin 5s linear infinite}
-@keyframes spin{to{--a:360deg}}
+.pn>svg{width:100%;height:100%;display:block;overflow:visible}
 
 /* plakat nama tim */
-.nm{display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:700;letter-spacing:2px;white-space:nowrap}
-#nl{background:linear-gradient(90deg,rgba(10,14,26,.92),rgba(12,44,112,.94));border-bottom:3px solid #3a82ff;clip-path:polygon(0 0,100% 0,94% 100%,0 100%)}
-#nr{background:linear-gradient(270deg,rgba(10,14,26,.92),rgba(106,12,28,.94));border-bottom:3px solid #ff4a62;clip-path:polygon(6% 0,100% 0,100% 100%,0 100%)}
-.nm::after,#mm::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.4) 50%,transparent 65%);transform:translateX(-130%);animation:sh 5s ease-in-out infinite}
-#nr::after{animation-delay:.7s}#mm::after{animation-delay:1.4s}
+.nm{display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:700;font-style:italic;letter-spacing:1px;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+#nl{background:linear-gradient(90deg,#08182a,#0d3550);border-bottom:2px solid #e3b449;clip-path:polygon(0 0,100% 0,95% 100%,0 100%)}
+#nr{background:linear-gradient(270deg,#08182a,#0d3550);border-bottom:2px solid #e3b449;clip-path:polygon(5% 0,100% 0,100% 100%,0 100%)}
+.nm::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);transform:translateX(-130%);animation:sh 5s ease-in-out infinite}
+#nr::after{animation-delay:.7s}
 @keyframes sh{0%,55%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
 
-/* bingkai minimap + ornamen */
-#mm{overflow:hidden;border:4px solid;border-image:linear-gradient(135deg,#7a5a22,#f7e6a8,#b08a35,#f7e6a8,#7a5a22) 1;box-shadow:0 0 14px rgba(255,205,120,.35)}
-#or svg{width:100%;height:100%;display:block;animation:gl 3.5s ease-in-out infinite alternate}
-@keyframes gl{from{filter:drop-shadow(0 0 2px rgba(255,220,140,.4))}to{filter:drop-shadow(0 0 9px rgba(255,235,170,.95))}}
-
-/* mode edit */
-.hd{display:none}
-body.edit{background:#0d1018}
-body.edit .pn{outline:2px dashed #20e0ff;outline-offset:-2px;cursor:move;touch-action:none}
-body.edit .pn.sel{outline:3px solid #ffe14a}
-body.edit .nm{clip-path:none}
-body.edit .hd{display:block;position:absolute;right:0;bottom:0;width:34px;height:34px;background:#20e0ff;cursor:nwse-resize;z-index:5}
-#tb{position:fixed;right:0;top:0;width:290px;height:100%;background:#12161f;color:#eef;font:14px system-ui,sans-serif;padding:12px;box-sizing:border-box;overflow:auto;z-index:99}
-#tb button{font:inherit;margin:2px;padding:7px 10px;border:0;border-radius:6px;background:#2b6fe0;color:#fff;cursor:pointer}
-#tb input{font:inherit;width:60px;padding:4px;background:#1b2030;color:#fff;border:1px solid #445;border-radius:4px}
-#tb p{opacity:.7;font-size:12px;line-height:1.5}#ur{width:100%;box-sizing:border-box;margin-top:6px}
+/* cahaya emblem */
+#em svg,#eb svg{animation:glow 3.5s ease-in-out infinite alternate}
+@keyframes glow{from{filter:drop-shadow(0 0 2px rgba(60,210,255,.35))}to{filter:drop-shadow(0 0 8px rgba(80,220,255,.9))}}
 </style></head><body>
-<div id="stage">
- <div class="pn" id="fr"></div>
- <div class="pn" id="mm"></div>
- <div class="pn nm" id="nl"><span></span></div>
- <div class="pn nm" id="nr"><span></span></div>
- <div class="pn" id="or"><svg viewBox="0 0 400 40" preserveAspectRatio="xMidYMid meet">
-  <defs>
-   <linearGradient id="gl"><stop offset="0" stop-color="#b08a35" stop-opacity="0"/><stop offset=".6" stop-color="#f7e6a8"/><stop offset="1" stop-color="#fff3c4"/></linearGradient>
-   <linearGradient id="gr"><stop offset="0" stop-color="#fff3c4"/><stop offset=".4" stop-color="#f7e6a8"/><stop offset="1" stop-color="#b08a35" stop-opacity="0"/></linearGradient>
-   <linearGradient id="gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset="1" stop-color="#9a7428"/></linearGradient>
-  </defs>
-  <rect x="0" y="19" width="166" height="2" fill="url(#gl)"/><rect x="234" y="19" width="166" height="2" fill="url(#gr)"/>
-  <rect x="50" y="26" width="112" height="1" fill="url(#gl)" opacity=".6"/><rect x="238" y="26" width="112" height="1" fill="url(#gr)" opacity=".6"/>
-  <rect x="50" y="13" width="112" height="1" fill="url(#gl)" opacity=".6"/><rect x="238" y="13" width="112" height="1" fill="url(#gr)" opacity=".6"/>
-  <path d="M172 20c-8 0-10-9-20-9M228 20c8 0 10-9 20-9M172 20c-8 0-10 9-20 9M228 20c8 0 10 9 20 9" fill="none" stroke="#f7e6a8" stroke-width="1.2" opacity=".8"/>
-  <polygon points="178,20 183,15 188,20 183,25" fill="url(#gd)"/><polygon points="212,20 217,15 222,20 217,25" fill="url(#gd)"/>
-  <polygon points="200,4 218,20 200,36 182,20" fill="url(#gd)" stroke="#fff3c4" stroke-width="1"/>
-  <polygon points="200,11 210,20 200,29 190,20" fill="#0b0f1a"/><circle cx="200" cy="20" r="2.6" fill="#ffe9a8"/>
- </svg></div>
-</div>
-<div id="tb" hidden>
- <b>Mode atur panel</b>
- <p>Klik panel (atau tombol namanya), geser untuk memindah, tarik kotak biru kanan-bawah untuk mengubah ukuran. Panah keyboard menggeser 1 px (Shift = 10 px, Alt = ubah ukuran).</p>
- <div id="pb"></div>
- <p>Dipilih: <b id="sn"></b></p>
- X <input id="ix" type="number"> Y <input id="iy" type="number"><br>W <input id="iw" type="number"> H <input id="ih" type="number">
- <p><button id="bg">Latar screenshot...</button><input type="file" id="fl" accept="image/*" hidden></p>
- <button id="cp">Salin URL</button><button id="rs" style="background:#d12b45">Reset</button>
- <input id="ur" readonly>
- <p>Tempel URL ini di sumber Link Live Studio. Simpan juga di Notepad.</p>
-</div>
-<script>
-const NAMA_KIRI="DARKSYSTEM", NAMA_KANAN="MUSUH ALLAH";   /* ganti nama tim di sini, atau pakai ?l=...&r=... */
-const $=id=>document.getElementById(id),Q=new URLSearchParams(location.search),E=Q.get('edit')=='1';
-$('nl').firstChild.textContent=Q.get('l')||NAMA_KIRI;$('nr').firstChild.textContent=Q.get('r')||NAMA_KANAN;
-const D={fr:[0,551,1080,707],mm:[4,638,174,198],nl:[190,612,250,46],nr:[640,612,250,46],or:[340,1238,400,40]};
-const N={fr:'Bingkai',mm:'Minimap',nl:'Nama kiri',nr:'Nama kanan',or:'Ornamen'},B={};
-for(const k in D){let a=D[k].slice();const t=(Q.get(k)||'').split(',').map(Number);if(t.length==4&&t.every(n=>!isNaN(n)))a=t;B[k]=a}
-function ap(k){const s=$(k).style,b=B[k];s.left=b[0]+'px';s.top=b[1]+'px';s.width=b[2]+'px';s.height=b[3]+'px';if(k=='nl'||k=='nr')s.fontSize=Math.round(b[3]*.56)+'px'}
-for(const k in B)ap(k);
-if(Q.get('bg'))document.body.classList.add('bg');
-function fit(){$('stage').style.transform='scale('+Math.min((innerWidth-(E?300:0))/1080,innerHeight/1920)+')'}addEventListener('resize',fit);fit();
 
-if(E){
- document.body.classList.add('edit');$('tb').hidden=false;
- let sel='fr',dr=null;
- $('pb').innerHTML=Object.keys(N).map(k=>`<button data-k="${k}">${N[k]}</button>`).join('');
- const url=()=>{let u=location.origin+location.pathname+'?'+Object.keys(B).map(k=>k+'='+B[k].join(',')).join('&');
-  if(Q.get('l'))u+='&l='+encodeURIComponent(Q.get('l'));if(Q.get('r'))u+='&r='+encodeURIComponent(Q.get('r'));$('ur').value=u};
- const mark=()=>{document.querySelectorAll('.pn').forEach(e=>e.classList.toggle('sel',e.id==sel));
-  ['x','y','w','h'].forEach((c,i)=>$('i'+c).value=B[sel][i]);$('sn').textContent=N[sel];url()};
- const scale=()=>Math.min((innerWidth-300)/1080,innerHeight/1920);
- document.querySelectorAll('.pn').forEach(el=>{
-  const h=document.createElement('div');h.className='hd';el.appendChild(h);
-  el.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();sel=el.id;dr={x:e.clientX,y:e.clientY,b:B[sel].slice(),rs:e.target.classList.contains('hd')};el.setPointerCapture(e.pointerId);mark()});
-  el.addEventListener('pointermove',e=>{if(!dr||sel!=el.id)return;const s=scale(),dx=(e.clientX-dr.x)/s,dy=(e.clientY-dr.y)/s,b=dr.b.slice();
-   if(dr.rs){b[2]=Math.max(20,Math.round(b[2]+dx));b[3]=Math.max(10,Math.round(b[3]+dy))}else{b[0]=Math.round(b[0]+dx);b[1]=Math.round(b[1]+dy)}
-   B[sel]=b;ap(sel);mark()});
-  el.addEventListener('pointerup',()=>dr=null)});
- $('pb').onclick=e=>{if(e.target.dataset.k){sel=e.target.dataset.k;mark()}};
- ['x','y','w','h'].forEach((c,i)=>$('i'+c).oninput=e=>{B[sel][i]=+e.target.value;ap(sel);url()});
- addEventListener('keydown',e=>{if(e.target.tagName=='INPUT'||!e.key.startsWith('Arrow'))return;e.preventDefault();
-  const st=e.shiftKey?10:1,dx=e.key=='ArrowRight'?st:e.key=='ArrowLeft'?-st:0,dy=e.key=='ArrowDown'?st:e.key=='ArrowUp'?-st:0,b=B[sel];
-  if(e.altKey){b[2]=Math.max(20,b[2]+dx);b[3]=Math.max(10,b[3]+dy)}else{b[0]+=dx;b[1]+=dy}ap(sel);mark()});
- $('bg').onclick=()=>$('fl').click();
- $('fl').onchange=e=>{const f=e.target.files[0];if(f)$('stage').style.background='url('+URL.createObjectURL(f)+') 0 0/100% 100%'};
- $('cp').onclick=()=>{$('ur').select();try{navigator.clipboard.writeText($('ur').value)}catch(_){document.execCommand('copy')}$('cp').textContent='Tersalin!';setTimeout(()=>$('cp').textContent='Salin URL',1500)};
- $('rs').onclick=()=>location.href=location.pathname+'?edit=1';
- mark();
+<!-- definisi warna dipakai bersama -->
+<svg width="0" height="0" style="position:absolute"><defs>
+ <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2b8"/><stop offset=".5" stop-color="#e3b449"/><stop offset="1" stop-color="#9a6f1c"/></linearGradient>
+ <linearGradient id="teal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14566b"/><stop offset="1" stop-color="#08202e"/></linearGradient>
+ <linearGradient id="gem" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8fbff"/><stop offset=".5" stop-color="#2fd0ff"/><stop offset="1" stop-color="#0a7fb5"/></linearGradient>
+ <radialGradient id="spot"><stop offset="0" stop-color="#5fe3ff" stop-opacity=".9"/><stop offset="1" stop-color="#5fe3ff" stop-opacity="0"/></radialGradient>
+</defs></svg>
+
+<div id="stage">
+
+ <!-- bar atas -->
+ <div class="pn" id="tb"><svg viewBox="0 0 864 48" preserveAspectRatio="none">
+  <path d="M0 0H864V20L848 33H0Z" fill="url(#teal)"/>
+  <path d="M0 33H846" stroke="#e3b449" stroke-width="1.5" vector-effect="non-scaling-stroke" fill="none"/>
+  <path d="M0 28H838" stroke="#2fd0ff" stroke-width="1" opacity=".55" vector-effect="non-scaling-stroke" fill="none"/>
+  <path d="M24 4L4 30M16 4L-4 30M32 4L12 30" stroke="#e3b449" stroke-width="3" vector-effect="non-scaling-stroke" fill="none"/>
+  <polygon points="24,2 52,2 78,31 50,31" fill="url(#gold)"/>
+  <polygon points="624,2 596,2 570,31 598,31" fill="url(#gold)"/>
+  <path d="M662 4L642 30M654 4L634 30M646 4L626 30" stroke="#e3b449" stroke-width="3" vector-effect="non-scaling-stroke" fill="none"/>
+  <path d="M690 22H824" stroke="#e3b449" stroke-width="1.5" vector-effect="non-scaling-stroke" fill="none"/>
+  <polygon points="824,3 864,3 864,40 852,24 824,24" fill="url(#gold)"/>
+ </svg></div>
+
+ <!-- bar bawah -->
+ <div class="pn" id="bb"><svg viewBox="0 0 1080 55" preserveAspectRatio="none">
+  <defs><g id="bs">
+   <polygon points="0,14 24,4 74,4 56,18 12,18 0,28" fill="url(#gold)"/>
+   <polygon points="276,13 370,13 358,29 264,29" fill="url(#gold)"/>
+   <path d="M216 14L200 42M208 14L192 42M200 14L184 42" stroke="#e3b449" stroke-width="3" vector-effect="non-scaling-stroke" fill="none"/>
+   <circle cx="150" cy="44" r="16" fill="url(#spot)"/>
+  </g></defs>
+  <path d="M0 16L26 10H1054L1080 16V46L1054 52H26L0 46Z" fill="url(#teal)"/>
+  <path d="M30 24H1050M30 44H1050" stroke="#e3b449" stroke-width="1.5" vector-effect="non-scaling-stroke" fill="none"/>
+  <use href="#bs"/>
+  <use href="#bs" transform="translate(1080 0) scale(-1 1)"/>
+ </svg></div>
+
+ <!-- minimap -->
+ <div class="pn" id="mm"><svg viewBox="0 0 215 175" preserveAspectRatio="none">
+  <path d="M5 5H210V118L155 170H5Z" fill="none" stroke="#0f4b60" stroke-width="8" vector-effect="non-scaling-stroke"/>
+  <path d="M5 5H210V118L155 170H5Z" fill="none" stroke="#e3b449" stroke-width="3" vector-effect="non-scaling-stroke"/>
+  <path d="M1.5 1.5H213.5V120L157 173.5H1.5Z" fill="none" stroke="#e3b449" stroke-width="1.2" opacity=".8" vector-effect="non-scaling-stroke"/>
+  <path d="M210 118L155 170" stroke="#2fd0ff" stroke-width="2" opacity=".8" vector-effect="non-scaling-stroke" fill="none"/>
+ </svg></div>
+
+ <!-- plakat nama -->
+ <div class="pn nm" id="nl"><span id="nlt"></span></div>
+ <div class="pn nm" id="nr"><span id="nrt"></span></div>
+
+ <!-- emblem atas -->
+ <div class="pn" id="em"><svg viewBox="0 0 210 110" preserveAspectRatio="xMidYMid meet">
+  <defs><g id="wg"><polygon points="100,18 40,6 6,16 60,22 14,24 62,30 20,34 70,44 100,56" fill="url(#gold)"/></g></defs>
+  <use href="#wg"/><use href="#wg" transform="translate(210 0) scale(-1 1)"/>
+  <ellipse cx="62" cy="52" rx="22" ry="7" fill="url(#spot)"/><ellipse cx="148" cy="52" rx="22" ry="7" fill="url(#spot)"/>
+  <polygon points="105,0 128,30 105,108 82,30" fill="url(#gold)" stroke="#fff3c4" stroke-width="1"/>
+  <polygon points="105,10 120,30 105,92 90,30" fill="#0b2a3a"/>
+  <polygon points="105,14 112,30 105,46 98,30" fill="url(#gem)"/>
+ </svg></div>
+
+ <!-- ornamen bawah -->
+ <div class="pn" id="eb"><svg viewBox="0 0 100 60" preserveAspectRatio="xMidYMid meet">
+  <polygon points="4,30 30,24 40,30 30,36" fill="url(#gold)"/><polygon points="96,30 70,24 60,30 70,36" fill="url(#gold)"/>
+  <polygon points="50,2 74,26 50,58 26,26" fill="url(#gold)" stroke="#fff3c4" stroke-width="1"/>
+  <polygon points="50,10 65,26 50,48 35,26" fill="#0b2a3a"/>
+  <polygon points="50,16 57,28 50,40 43,28" fill="url(#gem)"/>
+ </svg></div>
+
+</div>
+
+<script>
+const TOPIC="darksystem-mlbb-ganti-ini-7k2q";   /* SAMA persis dengan di control.html */
+const NAMA_KIRI="DARKSYSTEM", NAMA_KANAN="MUSUH ALLAH";   /* cadangan bila belum ada data dari control, atau pakai ?l=...&r=... */
+const $=id=>document.getElementById(id),Q=new URLSearchParams(location.search);
+const D={tb:[216,551,864,48],nl:[282,565,195,30],nr:[603,565,195,30],em:[472,551,136,72],mm:[2,553,215,175],bb:[0,1203,1080,55],eb:[490,1198,100,60]};  /* SAMA dengan DEF di control.html */
+let S={};
+try{S=JSON.parse(localStorage.ovlState)||{}}catch(_){}
+
+function setT(id,t){const el=$(id),s=el.firstChild;s.textContent=t;let f=parseFloat(el.style.fontSize)||20;el.style.fontSize=f+'px';
+ while(s.scrollWidth>el.clientWidth*.82&&f>8){f--;el.style.fontSize=f+'px'}}
+function ap(){
+ const L=Object.assign({},D,S.lay||{});
+ for(const k in D){const el=$(k),b=L[k];if(!el||!Array.isArray(b)||b.length!=4)continue;
+  const s=el.style;s.left=b[0]+'px';s.top=b[1]+'px';s.width=b[2]+'px';s.height=b[3]+'px';
+  if(k=='nl'||k=='nr')s.fontSize=Math.round(b[3]*.62)+'px'}
+ setT('nl',(S.left&&S.left.name)||Q.get('l')||NAMA_KIRI);
+ setT('nr',(S.right&&S.right.name)||Q.get('r')||NAMA_KANAN);
 }
+if(Q.get('bg'))document.body.classList.add('bg');
+function fit(){$('stage').style.transform='scale('+Math.min(innerWidth/1080,innerHeight/1920)+')'}
+addEventListener('resize',fit);fit();
+ap();
+document.fonts&&document.fonts.ready.then(ap);
+
+/* terima perubahan dari halaman control */
+const es=new EventSource('https://ntfy.sh/'+TOPIC+'/sse?since=12h');
+es.onmessage=e=>{try{const m=JSON.parse(e.data);if(m.event!='message')return;const o=JSON.parse(m.message);
+ if(o&&o.left){S=o;try{localStorage.ovlState=m.message}catch(_){}ap()}}catch(_){}};
 </script></body></html>
