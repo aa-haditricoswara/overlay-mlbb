@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Overlay MLBB - DARKSYSTEM vs MUSUH ALLAH</title>
+<title>Overlay MLBB Portrait - DARKSYSTEM vs MUSUH ALLAH</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Barlow+Condensed:wght@500;600&display=swap" rel="stylesheet">
 <style>
@@ -10,49 +10,52 @@
   --blue:#1f6bff; --blue-d:#0b2a66;
   --red:#ff2d4a;  --red-d:#5e0a1a;
   --ink:#0a0d14;  --gold:#ffc83d; --white:#f4f7ff;
+  --sb:1166px; --cy:850px;
 }
 html,body{margin:0;height:100%;background:transparent;overflow:hidden}
-#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;
   font-family:'Oswald','Arial Narrow',sans-serif;color:var(--white)}
-#ov{opacity:0;transition:opacity .6s}
+#ov{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;transition:opacity .6s}
 #ov.on{opacity:1}
 
-/* scoreboard */
-#score{position:absolute;top:0;left:50%;width:1260px;margin-left:-630px;height:96px;
-  display:flex;align-items:stretch;transform:translateY(-110%);transition:transform .7s cubic-bezier(.2,.9,.2,1)}
-#ov.on #score{transform:none}
-.side{flex:1;display:flex;align-items:center;gap:22px;padding:0 26px;background:var(--ink)}
-.side.l{border-bottom:6px solid var(--blue);background:linear-gradient(90deg,var(--ink),var(--blue-d));
-  clip-path:polygon(0 0,100% 0,calc(100% - 26px) 100%,0 100%)}
-.side.r{border-bottom:6px solid var(--red);background:linear-gradient(270deg,var(--ink),var(--red-d));flex-direction:row-reverse;
-  clip-path:polygon(26px 0,100% 0,100% 100%,0 100%)}
-.name{font-size:38px;font-weight:700;letter-spacing:1px;flex:1;white-space:nowrap}
-.r .name{text-align:right}
-.kills{font-size:54px;font-weight:700;min-width:70px;text-align:center}
-.l .kills{color:#7fb0ff}.r .kills{color:#ff8a9b}
-.mini{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:600;display:flex;gap:16px;opacity:.9}
-.mini b{color:var(--gold);font-weight:600}
-.mid{width:170px;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;
-  border-bottom:6px solid var(--gold)}
-#timer{font-size:46px;font-weight:700;line-height:1}
-.mid small{font-family:'Barlow Condensed',sans-serif;font-size:18px;color:var(--gold);letter-spacing:2px}
+/* bingkai minimap */
+#mm{position:absolute;box-sizing:border-box;border:4px solid var(--blue);pointer-events:none;
+  box-shadow:0 0 0 2px rgba(10,13,20,.7),0 0 22px rgba(31,107,255,.65),inset 0 0 12px rgba(31,107,255,.35)}
+#mm::after{content:"";position:absolute;left:-4px;bottom:-4px;width:46px;height:6px;background:var(--gold)}
 
-/* kartu pemain */
-.col{position:absolute;top:330px;width:330px;display:flex;flex-direction:column;gap:10px}
-.col.l{left:0;transform:translateX(-110%)}
-.col.r{right:0;transform:translateX(110%)}
+/* scoreboard (di bagian bawah area game) */
+#score{position:absolute;left:50%;top:var(--sb);width:720px;margin-left:-360px;height:78px;display:flex;
+  opacity:0;transform:translateY(16px);transition:transform .7s cubic-bezier(.2,.9,.2,1),opacity .7s}
+#ov.on #score{opacity:1;transform:none}
+.side{flex:1;display:flex;align-items:center;gap:12px;padding:0 18px;background:var(--ink)}
+.side.l{border-bottom:5px solid var(--blue);background:linear-gradient(90deg,var(--ink),var(--blue-d));
+  clip-path:polygon(0 0,100% 0,calc(100% - 20px) 100%,0 100%)}
+.side.r{border-bottom:5px solid var(--red);background:linear-gradient(270deg,var(--ink),var(--red-d));flex-direction:row-reverse;
+  clip-path:polygon(20px 0,100% 0,100% 100%,0 100%)}
+.name{font-size:26px;font-weight:700;letter-spacing:1px;flex:1;white-space:nowrap}
+.r .name{text-align:right}
+.kills{font-size:44px;font-weight:700;min-width:56px;text-align:center}
+.l .kills{color:#7fb0ff}.r .kills{color:#ff8a9b}
+.mini{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:600;display:flex;gap:10px;opacity:.9}
+.mini b{color:var(--gold);font-weight:600}
+.mid{width:130px;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border-bottom:5px solid var(--gold)}
+#timer{font-size:36px;font-weight:700;line-height:1}
+.mid small{font-family:'Barlow Condensed',sans-serif;font-size:15px;color:var(--gold);letter-spacing:2px}
+
+/* kartu KDA */
+.col{position:absolute;left:0;top:var(--cy);width:250px;display:flex;flex-direction:column;gap:8px;transform:translateX(-110%)}
 #ov.on .col{transform:none;transition:transform .8s .25s cubic-bezier(.2,.9,.2,1)}
-.p{display:flex;align-items:center;gap:12px;height:68px;padding:0 16px;background:rgba(10,13,20,.88)}
-.l .p{border-left:6px solid var(--blue);clip-path:polygon(0 0,100% 0,calc(100% - 14px) 100%,0 100%)}
-.r .p{border-right:6px solid var(--red);flex-direction:row-reverse;clip-path:polygon(14px 0,100% 0,100% 100%,0 100%)}
-.p .n{flex:1;font-size:26px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.r .p .n{text-align:right}
-.p .k{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:600;color:var(--gold)}
+.p{display:flex;align-items:center;gap:12px;height:58px;padding:0 16px;background:rgba(10,13,20,.88);
+  border-left:6px solid var(--blue);clip-path:polygon(0 0,100% 0,calc(100% - 14px) 100%,0 100%)}
+.p .n{flex:1;font-size:22px;font-weight:500;white-space:nowrap}
+.p .k{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:600;color:var(--gold)}
 </style>
 </head>
 <body>
 <div id="stage">
  <div id="ov">
+  <div id="mm"></div>
   <div id="score">
     <div class="side l">
       <div class="name" id="nameL"></div>
@@ -66,8 +69,7 @@ html,body{margin:0;height:100%;background:transparent;overflow:hidden}
       <div class="kills" id="kR">0</div>
     </div>
   </div>
-  <div class="col l" id="colL"></div>
-  <div class="col r" id="colR"></div>
+  <div class="col" id="colL"></div>
  </div>
 </div>
 
@@ -76,7 +78,7 @@ html,body{margin:0;height:100%;background:transparent;overflow:hidden}
 const CFG = {
   left:  { name:"DARKSYSTEM",  kills:0, towers:null, gold:null, players:[] },
   right: { name:"MUSUH ALLAH", kills:0, towers:null, gold:null, players:[] },
-  wsUrl: "ws://localhost:8765"   // opsional: dipakai script deteksi otomatis
+  wsUrl: "ws://localhost:8765"
 };
 /* ========================== */
 
@@ -84,20 +86,31 @@ const $ = id => document.getElementById(id);
 const ov = $('ov');
 let secs = 0, tick = null, ext = false;
 
-function fit(){ const s=Math.min(innerWidth/1920, innerHeight/1080); $('stage').style.transform='scale('+s+')'; }
+/* Posisi bisa diatur lewat URL, tanpa upload ulang:
+   ?demo=1&mm=4,638,174,198&sb=1166&kda=850
+   mm = x,y,lebar,tinggi bingkai minimap | sb = posisi scoreboard (y) | kda = posisi kartu KDA (y)
+   Satuan piksel pada kanvas 1080x1920. */
+const Q = new URLSearchParams(location.search);
+let mm = [4, 638, 174, 198];
+if (Q.get('mm')) { const a = Q.get('mm').split(',').map(Number); if (a.length === 4 && a.every(n => !isNaN(n))) mm = a; }
+$('mm').style.cssText = 'left:'+mm[0]+'px;top:'+mm[1]+'px;width:'+mm[2]+'px;height:'+mm[3]+'px';
+if (Q.get('sb'))  document.documentElement.style.setProperty('--sb', parseFloat(Q.get('sb')) + 'px');
+if (Q.get('kda')) document.documentElement.style.setProperty('--cy', parseFloat(Q.get('kda')) + 'px');
+
+function fit(){ const s=Math.min(innerWidth/1080, innerHeight/1920); $('stage').style.transform='scale('+s+')'; }
 addEventListener('resize',fit); fit();
 
 function cards(el, list){
   el.innerHTML = list.map(p=>'<div class="p"><div class="n">'+p.n+'</div><div class="k">'+p.k+'</div></div>').join('');
 }
+function opt(id,v){ const e=$(id); e.textContent=v==null?'':v; e.parentElement.style.display=v==null?'none':''; }
 function render(){
   const L=CFG.left,R=CFG.right;
   $('nameL').textContent=L.name; $('nameR').textContent=R.name;
   $('kL').textContent=L.kills; $('kR').textContent=R.kills;
   opt('twL',L.towers); opt('twR',R.towers); opt('gdL',L.gold); opt('gdR',R.gold);
-  cards($('colL'),L.players); cards($('colR'),R.players);
+  cards($('colL'),L.players);
 }
-function opt(id,v){ const e=$(id); e.textContent=v==null?'':v; e.parentElement.style.display=v==null?'none':''; }
 function fmt(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
 
 function show(){
@@ -117,8 +130,7 @@ addEventListener('keydown',e=>{
   if(k==='e'){CFG.right.kills++;render()} if(k==='d'){CFG.right.kills=Math.max(0,CFG.right.kills-1);render()}
 });
 
-/* Kontrol otomatis dari script lokal (opsional).
-   Kirim JSON: {"show":true} / {"show":false} / {"left":{"kills":3,"gold":"12.4k"},"right":{...}} */
+/* Data otomatis dari mlbb_tracker.py lewat WebSocket */
 function connect(){
   try{
     const ws=new WebSocket(CFG.wsUrl);
@@ -138,8 +150,12 @@ function connect(){
 }
 render(); connect();
 
-/* Tes cepat: buka index.html?demo=1 */
-if(/[?&]demo=1/.test(location.search)) show();
+/* Tes tampilan: ?demo=1 menampilkan overlay terus dengan data contoh */
+if(/[?&]demo=1/.test(location.search)){
+  CFG.left.kills=5; CFG.right.kills=3;
+  CFG.left.players=[{n:"KDA",k:"5/2/7"}];
+  render(); show();
+}
 </script>
 </body>
 </html>
