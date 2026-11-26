@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><title>Kontrol Overlay</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font:15px system-ui,sans-serif;margin:0;padding:12px;background:#10131c;color:#eef}
+button{font:inherit;padding:10px 14px;border:0;border-radius:6px;background:#2b6fe0;color:#fff;margin:2px}
+button.r{background:#d12b45}input{font:inherit;padding:6px;border-radius:4px;border:1px solid #445;background:#1b2030;color:#fff;width:100%;box-sizing:border-box}
+input[type=checkbox]{width:auto}.bar{position:sticky;top:0;background:#10131c;padding:6px 0;z-index:2}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px}.tm{background:#181d2b;padding:10px;border-radius:8px}
+.g{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:4px;margin-top:4px}.h{font-size:12px;opacity:.7}
+.f{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:6px;align-items:end;margin-bottom:6px}#ok{opacity:.7}
+</style></head><body>
+<div class="bar"><button id="sh" class="r">TAMPILKAN</button><button id="st">Start timer</button><button id="pa">Pause</button><button id="rs">Reset</button> <b id="tt">00:00</b> <span id="ok"></span></div>
+<div class="f"><label>Label game<input data-p="info"></label><label style="grid-column:span 3">Teks merah (host/caster)<input data-p="cap"></label></div>
+<div class="cols" id="cols"></div>
+<script>
+const TOPIC="darksystem-mlbb-ganti-ini-7k2q";  /* SAMA persis dengan di index.html */
+const mk=p=>[1,2,3,4,5].map(i=>({n:p+" "+i,k:0,d:0,a:0,lv:1}));
+let S={show:false,t:{base:0,run:false},info:"GAME 1",cap:"",
+ left:{name:"DARKSYSTEM",tag:"DS",kills:0,auto:true,tw:0,gold:"0k",p:mk("Player")},
+ right:{name:"MUSUH ALLAH",tag:"MA",kills:0,auto:true,tw:0,gold:"0k",p:mk("Musuh")}};
+try{const o=JSON.parse(localStorage.ctl);if(o&&o.left)S=o}catch(_){}
+let T={base:S.t.base,run:false,at:Date.now()};S.t.run=false;
+const $=id=>document.getElementById(id),cur=()=>T.base+(T.run?(Date.now()-T.at)/1000:0);
+const team=k=>`<div class="tm"><b>${k=='left'?'Tim kiri (biru)':'Tim kanan (merah)'}</b>
+<div class="g" style="grid-template-columns:3fr 1fr"><input data-p="${k}.name"><input data-p="${k}.tag" maxlength="3"></div>
+<div class="g" style="grid-template-columns:1fr 1fr 1fr"><span class="h">Tower</span><span class="h">Gold</span><span class="h">Kill</span>
+<input type="number" data-p="${k}.tw"><input data-p="${k}.gold"><span><input type="number" data-p="${k}.kills"> <label><input type="checkbox" data-p="${k}.auto"> auto</label></span></div>
+<div class="g h"><span>Pemain</span><span>K</span><span>D</span><span>A</span><span>Lv</span></div>
+${[0,1,2,3,4].map(i=>`<div class="g"><input data-p="${k}.p.${i}.n"><input type="number" data-p="${k}.p.${i}.k"><input type="number" data-p="${k}.p.${i}.d"><input type="number" data-p="${k}.p.${i}.a"><input type="number" data-p="${k}.p.${i}.lv"></div>`).join('')}</div>`;
+$('cols').innerHTML=team('left')+team('right');
+const path=(o,p,v)=>{const a=p.split('.'),l=a.pop();for(const x of a)o=o[x];if(v===undefined)return o[l];o[l]=v};
+function fill(){document.querySelectorAll('[data-p]').forEach(e=>{const v=path(S,e.dataset.p);e.type=='checkbox'?e.checked=!!v:e.value=v});$('sh').textContent=S.show?'SEMBUNYIKAN':'TAMPILKAN'}
+document.addEventListener('input',e=>{const t=e.target;if(!t.dataset.p)return;path(S,t.dataset.p,t.type=='checkbox'?t.checked:t.type=='number'?+t.value:t.value);send()});
+let tm;function send(){clearTimeout(tm);tm=setTimeout(()=>{S.t={base:Math.floor(cur()),run:T.run};const j=JSON.stringify(S);localStorage.ctl=j;localStorage.setItem('ovl',j);
+ fetch('https://ntfy.sh/'+TOPIC,{method:'POST',body:j}).then(r=>$('ok').textContent=r.ok?'terkirim':'gagal kirim').catch(()=>$('ok').textContent='gagal kirim, cek internet')},200)}
+$('sh').onclick=()=>{S.show=!S.show;fill();send()};
+$('st').onclick=()=>{if(!T.run){T.base=cur();T.at=Date.now();T.run=true}send()};
+$('pa').onclick=()=>{T.base=cur();T.run=false;send()};
+$('rs').onclick=()=>{T={base:0,run:false,at:Date.now()};send()};
+setInterval(()=>{const s=Math.floor(cur()),p=n=>String(n).padStart(2,'0');$('tt').textContent=p(s/60|0)+':'+p(s%60)},250);
+fill();
+</script></body></html>

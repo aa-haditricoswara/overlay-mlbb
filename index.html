@@ -1,161 +1,76 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="utf-8">
-<title>Overlay MLBB Portrait - DARKSYSTEM vs MUSUH ALLAH</title>
+<html lang="id"><head><meta charset="utf-8"><title>Overlay MLBB</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Barlow+Condensed:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --blue:#1f6bff; --blue-d:#0b2a66;
-  --red:#ff2d4a;  --red-d:#5e0a1a;
-  --ink:#0a0d14;  --gold:#ffc83d; --white:#f4f7ff;
-  --sb:1166px; --cy:850px;
-}
+:root{--bl:#1d5fd1;--bld:#0c2c70;--rd:#e0243f;--rdd:#6a0c1c;--ink:#0b0f1a;--gd:#ffc83d;--sb:612px;--pl:850px}
 html,body{margin:0;height:100%;background:transparent;overflow:hidden}
-#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;
-  font-family:'Oswald','Arial Narrow',sans-serif;color:var(--white)}
-#ov{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;transition:opacity .6s}
-#ov.on{opacity:1}
-
-/* bingkai minimap */
-#mm{position:absolute;box-sizing:border-box;border:4px solid var(--blue);pointer-events:none;
-  box-shadow:0 0 0 2px rgba(10,13,20,.7),0 0 22px rgba(31,107,255,.65),inset 0 0 12px rgba(31,107,255,.35)}
-#mm::after{content:"";position:absolute;left:-4px;bottom:-4px;width:46px;height:6px;background:var(--gold)}
-
-/* scoreboard (di bagian bawah area game) */
-#score{position:absolute;left:50%;top:var(--sb);width:720px;margin-left:-360px;height:78px;display:flex;
-  opacity:0;transform:translateY(16px);transition:transform .7s cubic-bezier(.2,.9,.2,1),opacity .7s}
-#ov.on #score{opacity:1;transform:none}
-.side{flex:1;display:flex;align-items:center;gap:12px;padding:0 18px;background:var(--ink)}
-.side.l{border-bottom:5px solid var(--blue);background:linear-gradient(90deg,var(--ink),var(--blue-d));
-  clip-path:polygon(0 0,100% 0,calc(100% - 20px) 100%,0 100%)}
-.side.r{border-bottom:5px solid var(--red);background:linear-gradient(270deg,var(--ink),var(--red-d));flex-direction:row-reverse;
-  clip-path:polygon(20px 0,100% 0,100% 100%,0 100%)}
-.name{font-size:26px;font-weight:700;letter-spacing:1px;flex:1;white-space:nowrap}
-.r .name{text-align:right}
-.kills{font-size:44px;font-weight:700;min-width:56px;text-align:center}
-.l .kills{color:#7fb0ff}.r .kills{color:#ff8a9b}
-.mini{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:600;display:flex;gap:10px;opacity:.9}
-.mini b{color:var(--gold);font-weight:600}
-.mid{width:130px;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;
-  border-bottom:5px solid var(--gold)}
-#timer{font-size:36px;font-weight:700;line-height:1}
-.mid small{font-family:'Barlow Condensed',sans-serif;font-size:15px;color:var(--gold);letter-spacing:2px}
-
-/* kartu KDA */
-.col{position:absolute;left:0;top:var(--cy);width:250px;display:flex;flex-direction:column;gap:8px;transform:translateX(-110%)}
-#ov.on .col{transform:none;transition:transform .8s .25s cubic-bezier(.2,.9,.2,1)}
-.p{display:flex;align-items:center;gap:12px;height:58px;padding:0 16px;background:rgba(10,13,20,.88);
-  border-left:6px solid var(--blue);clip-path:polygon(0 0,100% 0,calc(100% - 14px) 100%,0 100%)}
-.p .n{flex:1;font-size:22px;font-weight:500;white-space:nowrap}
-.p .k{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:600;color:var(--gold)}
-</style>
-</head>
-<body>
-<div id="stage">
- <div id="ov">
-  <div id="mm"></div>
-  <div id="score">
-    <div class="side l">
-      <div class="name" id="nameL"></div>
-      <div class="mini"><span>TWR <b id="twL">0</b></span><span>GOLD <b id="gdL">0</b></span></div>
-      <div class="kills" id="kL">0</div>
-    </div>
-    <div class="mid"><div id="timer">00:00</div><small>MATCH</small></div>
-    <div class="side r">
-      <div class="name" id="nameR"></div>
-      <div class="mini"><span>TWR <b id="twR">0</b></span><span>GOLD <b id="gdR">0</b></span></div>
-      <div class="kills" id="kR">0</div>
-    </div>
-  </div>
-  <div class="col" id="colL"></div>
- </div>
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;font-family:'Oswald','Arial Narrow',sans-serif;color:#fff}
+#ov{position:absolute;inset:0;opacity:0;transition:opacity .5s}#ov.on{opacity:1}
+#mm{position:absolute;box-sizing:border-box;border:5px solid #fff;box-shadow:0 0 0 2px rgba(0,0,0,.5)}
+#mm::before,#mm::after{content:"";position:absolute;width:46px;height:9px;background:var(--rd)}
+#mm::before{left:-5px;top:-5px}#mm::after{right:-5px;bottom:-5px}
+#sc{position:absolute;left:50%;top:var(--sb);width:1040px;margin-left:-520px;height:86px;display:flex;transform:translateY(-14px);transition:transform .6s}
+#ov.on #sc{transform:none}
+.sd{flex:1;display:flex;flex-direction:column}
+.top{height:52px;display:flex;align-items:center;gap:16px;padding:0 20px;font:700 22px 'Barlow Condensed',sans-serif}
+.top b{color:var(--gd);font-weight:700}.top em{font:700 42px 'Oswald',sans-serif;font-style:normal;margin-left:auto;min-width:56px;text-align:center}
+.bot{height:34px;background:#f4f6fb;color:#0b0f1a;display:flex;align-items:center;gap:10px;padding:0 14px;font:700 24px 'Oswald',sans-serif;white-space:nowrap}
+.bot u{text-decoration:none;width:28px;height:24px;display:grid;place-items:center;color:#fff;font-size:14px}
+.l .top{background:linear-gradient(90deg,var(--ink),var(--bld));border-bottom:4px solid var(--bl)}.l .bot u{background:var(--bl)}
+.r .top{background:linear-gradient(270deg,var(--ink),var(--rdd));border-bottom:4px solid var(--rd);flex-direction:row-reverse}.r .top em{margin:0 auto 0 0}
+.r .bot{flex-direction:row-reverse}.r .bot u{background:var(--rd)}
+.l{clip-path:polygon(0 0,100% 0,calc(100% - 22px) 100%,0 100%)}.r{clip-path:polygon(22px 0,100% 0,100% 100%,0 100%)}
+.ct{width:170px;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;border-bottom:5px solid var(--gd);z-index:1}
+#tm{font-size:38px;font-weight:700;line-height:1}.ct small{font:600 16px 'Barlow Condensed';letter-spacing:2px;color:var(--gd);margin-top:4px}
+#cap{position:absolute;left:50%;top:calc(var(--sb) + 94px);transform:translateX(-50%);background:var(--rd);padding:3px 26px;font:600 20px 'Barlow Condensed';white-space:nowrap}
+#cap:empty{display:none}
+.col{position:absolute;top:var(--pl);width:200px;display:flex;flex-direction:column;gap:6px}.col.l{left:0}.col.r{right:0}
+.col{clip-path:none}
+.p{height:54px;display:flex;align-items:center;gap:10px;padding:0 10px;background:rgba(11,15,26,.86)}
+.col.l .p{border-left:6px solid var(--bl)}.col.r .p{border-right:6px solid var(--rd);flex-direction:row-reverse;text-align:right}
+.p i{font:700 18px 'Oswald';font-style:normal;width:34px;height:34px;border-radius:50%;border:2px solid var(--gd);display:grid;place-items:center;flex:none}
+.p div{min-width:0;flex:1}.p b{display:block;font:500 19px 'Oswald';white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p span{font:700 24px 'Barlow Condensed';color:var(--gd)}
+</style></head><body>
+<div id="stage"><div id="ov">
+<div id="mm"></div>
+<div id="sc">
+ <div class="sd l"><div class="top"><span>TWR <b id="twL"></b></span><span>$ <b id="gdL"></b></span><em id="kL"></em></div><div class="bot"><u id="lgL"></u><span id="nmL"></span></div></div>
+ <div class="ct"><div id="tm">00:00</div><small id="gm"></small></div>
+ <div class="sd r"><div class="top"><span>TWR <b id="twR"></b></span><span>$ <b id="gdR"></b></span><em id="kR"></em></div><div class="bot"><u id="lgR"></u><span id="nmR"></span></div></div>
 </div>
-
+<div id="cap"></div>
+<div class="col l" id="pl"></div><div class="col r" id="pr"></div>
+</div></div>
 <script>
-/* ====== EDIT DI SINI ====== */
-const CFG = {
-  left:  { name:"DARKSYSTEM",  kills:0, towers:null, gold:null, players:[] },
-  right: { name:"MUSUH ALLAH", kills:0, towers:null, gold:null, players:[] },
-  wsUrl: "ws://localhost:8765"
-};
-/* ========================== */
-
-const $ = id => document.getElementById(id);
-const ov = $('ov');
-let secs = 0, tick = null, ext = false;
-
-/* Posisi bisa diatur lewat URL, tanpa upload ulang:
-   ?demo=1&mm=4,638,174,198&sb=1166&kda=850
-   mm = x,y,lebar,tinggi bingkai minimap | sb = posisi scoreboard (y) | kda = posisi kartu KDA (y)
-   Satuan piksel pada kanvas 1080x1920. */
-const Q = new URLSearchParams(location.search);
-let mm = [4, 638, 174, 198];
-if (Q.get('mm')) { const a = Q.get('mm').split(',').map(Number); if (a.length === 4 && a.every(n => !isNaN(n))) mm = a; }
-$('mm').style.cssText = 'left:'+mm[0]+'px;top:'+mm[1]+'px;width:'+mm[2]+'px;height:'+mm[3]+'px';
-if (Q.get('sb'))  document.documentElement.style.setProperty('--sb', parseFloat(Q.get('sb')) + 'px');
-if (Q.get('kda')) document.documentElement.style.setProperty('--cy', parseFloat(Q.get('kda')) + 'px');
-
-function fit(){ const s=Math.min(innerWidth/1080, innerHeight/1920); $('stage').style.transform='scale('+s+')'; }
-addEventListener('resize',fit); fit();
-
-function cards(el, list){
-  el.innerHTML = list.map(p=>'<div class="p"><div class="n">'+p.n+'</div><div class="k">'+p.k+'</div></div>').join('');
-}
-function opt(id,v){ const e=$(id); e.textContent=v==null?'':v; e.parentElement.style.display=v==null?'none':''; }
+const TOPIC="darksystem-mlbb-ganti-ini-7k2q";  /* ganti, SAMA persis dengan di control.html */
+const mk=(p)=>[1,2,3,4,5].map(i=>({n:p+" "+i,k:0,d:0,a:0,lv:1}));
+let S={show:false,t:{base:0,run:false},info:"GAME 1",cap:"",
+ left:{name:"DARKSYSTEM",tag:"DS",kills:0,auto:true,tw:0,gold:"0k",p:mk("Player")},
+ right:{name:"MUSUH ALLAH",tag:"MA",kills:0,auto:true,tw:0,gold:"0k",p:mk("Musuh")}};
+let A=Date.now()/1000;
+const $=id=>document.getElementById(id),Q=new URLSearchParams(location.search),root=document.documentElement.style;
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+let mm=[4,638,174,198];if(Q.get('mm')){const a=Q.get('mm').split(',').map(Number);if(a.length==4&&a.every(n=>!isNaN(n)))mm=a}
+$('mm').style.cssText='left:'+mm[0]+'px;top:'+mm[1]+'px;width:'+mm[2]+'px;height:'+mm[3]+'px';
+if(Q.get('sb'))root.setProperty('--sb',parseFloat(Q.get('sb'))+'px');
+if(Q.get('pl'))root.setProperty('--pl',parseFloat(Q.get('pl'))+'px');
+function fit(){$('stage').style.transform='scale('+Math.min(innerWidth/1080,innerHeight/1920)+')'}addEventListener('resize',fit);fit();
+const kills=s=>s.auto?s.p.reduce((x,p)=>x+(+p.k||0),0):s.kills;
+const rows=s=>s.p.filter(p=>p.n).map(p=>`<div class="p"><i>${esc(p.lv)}</i><div><b>${esc(p.n)}</b><span>${+p.k||0}/${+p.d||0}/${+p.a||0}</span></div></div>`).join('');
 function render(){
-  const L=CFG.left,R=CFG.right;
-  $('nameL').textContent=L.name; $('nameR').textContent=R.name;
-  $('kL').textContent=L.kills; $('kR').textContent=R.kills;
-  opt('twL',L.towers); opt('twR',R.towers); opt('gdL',L.gold); opt('gdR',R.gold);
-  cards($('colL'),L.players);
-}
-function fmt(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
-
-function show(){
-  if(ov.classList.contains('on')) return;
-  ov.classList.add('on');
-  if(ext) return;
-  secs=0; $('timer').textContent=fmt(0);
-  clearInterval(tick); tick=setInterval(()=>{ secs++; $('timer').textContent=fmt(secs); },1000);
-}
-function hide(){ ov.classList.remove('on'); clearInterval(tick); }
-
-/* Kontrol manual: S = muncul/hilang, Q/A = kill kiri +/-, E/D = kill kanan +/- */
-addEventListener('keydown',e=>{
-  const k=e.key.toLowerCase();
-  if(k==='s') ov.classList.contains('on')?hide():show();
-  if(k==='q'){CFG.left.kills++;render()} if(k==='a'){CFG.left.kills=Math.max(0,CFG.left.kills-1);render()}
-  if(k==='e'){CFG.right.kills++;render()} if(k==='d'){CFG.right.kills=Math.max(0,CFG.right.kills-1);render()}
-});
-
-/* Data otomatis dari mlbb_tracker.py lewat WebSocket */
-function connect(){
-  try{
-    const ws=new WebSocket(CFG.wsUrl);
-    ws.onmessage=m=>{
-      try{
-        const d=JSON.parse(m.data);
-        if(d.left) Object.assign(CFG.left,d.left);
-        if(d.right) Object.assign(CFG.right,d.right);
-        if(d.timer){ ext=true; clearInterval(tick); $('timer').textContent=d.timer; }
-        render();
-        if(d.show===true) show(); if(d.show===false) hide();
-      }catch(_){}
-    };
-    ws.onclose=()=>{ if(ext) hide(); setTimeout(connect,3000); };
-    ws.onerror=()=>ws.close();
-  }catch(_){ setTimeout(connect,5000); }
-}
-render(); connect();
-
-/* Tes tampilan: ?demo=1 menampilkan overlay terus dengan data contoh */
-if(/[?&]demo=1/.test(location.search)){
-  CFG.left.kills=5; CFG.right.kills=3;
-  CFG.left.players=[{n:"KDA",k:"5/2/7"}];
-  render(); show();
-}
-</script>
-</body>
-</html>
+ for(const [k,s] of [['L',S.left],['R',S.right]]){
+  $('nm'+k).textContent=s.name;$('lg'+k).textContent=s.tag;$('k'+k).textContent=kills(s);
+  $('tw'+k).textContent=s.tw;$('gd'+k).textContent=s.gold;$('p'+k.toLowerCase()).innerHTML=rows(s)}
+ $('gm').textContent=S.info;$('cap').textContent=S.cap?'\u{1F399} '+S.cap:'';
+ $('ov').classList.toggle('on',!!S.show)}
+function set(s,a){S=s;A=a;render()}
+setInterval(()=>{const s=S.t.base+(S.t.run?Math.max(0,Math.floor(Date.now()/1000-A)):0),p=n=>String(n).padStart(2,'0');$('tm').textContent=p(s/60|0)+':'+p(s%60)},250);
+try{const es=new EventSource('https://ntfy.sh/'+TOPIC+'/sse?since=latest');
+ es.onmessage=e=>{try{const m=JSON.parse(e.data);if(m.event==='message')set(JSON.parse(m.message),m.time)}catch(_){}}}catch(_){}
+addEventListener('storage',e=>{if(e.key==='ovl'&&e.newValue)try{set(JSON.parse(e.newValue),Date.now()/1000)}catch(_){}});
+render();
+if(/[?&]demo=1/.test(location.search)){S.show=true;S.t={base:958,run:true};S.cap="HOST: BANG BANG";S.left.tw=8;S.left.gold="51.8k";S.right.tw=2;S.right.gold="36.2k";
+ S.left.p.forEach((p,i)=>{p.k=i+1;p.d=i;p.a=i*2;p.lv=12+i});S.right.p.forEach((p,i)=>{p.k=i;p.d=i+1;p.a=i+2;p.lv=11+i});render()}
+</script></body></html>
