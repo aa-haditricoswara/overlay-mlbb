@@ -18,7 +18,7 @@ body.bg #stage{background:linear-gradient(#1c2b22,#27402f 60%,#1c2b22)}
 @keyframes sh{0%,55%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
 
 /* cahaya emblem */
-#em svg,#eb svg{animation:glow 3.5s ease-in-out infinite alternate}
+#em svg,#eb svg,.xx.gw svg{animation:glow 3.5s ease-in-out infinite alternate}
 @keyframes glow{from{filter:drop-shadow(0 0 2px rgba(60,210,255,.35))}to{filter:drop-shadow(0 0 8px rgba(80,220,255,.9))}}
 </style></head><body>
 
@@ -28,6 +28,7 @@ body.bg #stage{background:linear-gradient(#1c2b22,#27402f 60%,#1c2b22)}
  <linearGradient id="teal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14566b"/><stop offset="1" stop-color="#08202e"/></linearGradient>
  <linearGradient id="gem" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8fbff"/><stop offset=".5" stop-color="#2fd0ff"/><stop offset="1" stop-color="#0a7fb5"/></linearGradient>
  <radialGradient id="spot"><stop offset="0" stop-color="#5fe3ff" stop-opacity=".9"/><stop offset="1" stop-color="#5fe3ff" stop-opacity="0"/></radialGradient>
+ <g id="wg"><polygon points="100,18 40,6 6,16 60,22 14,24 62,30 20,34 70,44 100,56" fill="url(#gold)"/></g>
 </defs></svg>
 
 <div id="stage">
@@ -73,8 +74,7 @@ body.bg #stage{background:linear-gradient(#1c2b22,#27402f 60%,#1c2b22)}
 
  <!-- emblem atas -->
  <div class="pn" id="em"><svg viewBox="0 0 210 110" preserveAspectRatio="xMidYMid meet">
-  <defs><g id="wg"><polygon points="100,18 40,6 6,16 60,22 14,24 62,30 20,34 70,44 100,56" fill="url(#gold)"/></g></defs>
-  <use href="#wg"/><use href="#wg" transform="translate(210 0) scale(-1 1)"/>
+    <use href="#wg"/><use href="#wg" transform="translate(210 0) scale(-1 1)"/>
   <ellipse cx="62" cy="52" rx="22" ry="7" fill="url(#spot)"/><ellipse cx="148" cy="52" rx="22" ry="7" fill="url(#spot)"/>
   <polygon points="105,0 128,30 105,108 82,30" fill="url(#gold)" stroke="#fff3c4" stroke-width="1"/>
   <polygon points="105,10 120,30 105,92 90,30" fill="#0b2a3a"/>
@@ -102,11 +102,21 @@ try{S=JSON.parse(localStorage.ovlState)||{}}catch(_){}
 function setT(id,t){const el=$(id),s=el.firstChild,m=+((S.fs||{})[id])>0;s.textContent=t;
  let f=m?+S.fs[id]:(parseFloat(el.style.fontSize)||20);el.style.fontSize=f+'px';
  if(!m)while(s.scrollWidth>el.clientWidth*.82&&f>8){f--;el.style.fontSize=f+'px'}}
+/* ornamen tambahan dari control */
+const EX={
+ diamond:'<svg viewBox="0 0 100 60" preserveAspectRatio="xMidYMid meet"><polygon points="4,30 30,24 40,30 30,36" fill="url(#gold)"/><polygon points="96,30 70,24 60,30 70,36" fill="url(#gold)"/><polygon points="50,2 74,26 50,58 26,26" fill="url(#gold)" stroke="#fff3c4" stroke-width="1"/><polygon points="50,10 65,26 50,48 35,26" fill="#0b2a3a"/><polygon points="50,16 57,28 50,40 43,28" fill="url(#gem)"/></svg>',
+ wing:'<svg viewBox="0 0 210 110" preserveAspectRatio="xMidYMid meet"><use href="#wg"/><use href="#wg" transform="translate(210 0) scale(-1 1)"/><ellipse cx="62" cy="52" rx="22" ry="7" fill="url(#spot)"/><ellipse cx="148" cy="52" rx="22" ry="7" fill="url(#spot)"/><polygon points="105,0 128,30 105,108 82,30" fill="url(#gold)" stroke="#fff3c4" stroke-width="1"/><polygon points="105,10 120,30 105,92 90,30" fill="#0b2a3a"/><polygon points="105,14 112,30 105,46 98,30" fill="url(#gem)"/></svg>',
+ line:'<svg viewBox="0 0 200 10" preserveAspectRatio="none"><path d="M0 3H200" fill="none" stroke="#e3b449" stroke-width="2" vector-effect="non-scaling-stroke"/><path d="M0 7H200" fill="none" stroke="#2fd0ff" stroke-width="1" opacity=".6" vector-effect="non-scaling-stroke"/></svg>',
+ hatch:'<svg viewBox="0 0 40 28" preserveAspectRatio="none"><path d="M30 2L10 26M22 2L2 26M38 2L18 26" stroke="#e3b449" stroke-width="3" vector-effect="non-scaling-stroke" fill="none"/></svg>',
+ slash:'<svg viewBox="0 0 60 30" preserveAspectRatio="none"><polygon points="20,0 60,0 40,30 0,30" fill="url(#gold)"/></svg>',
+ glow:'<svg viewBox="0 0 40 40" preserveAspectRatio="none"><circle cx="20" cy="20" r="20" fill="url(#spot)"/></svg>'};
 function ap(){
- const L=Object.assign({},D,S.lay||{});
- for(const k in D){const el=$(k),b=L[k];if(!el||!Array.isArray(b)||b.length!=4)continue;
-  const s=el.style;s.left=b[0]+'px';s.top=b[1]+'px';s.width=b[2]+'px';s.height=b[3]+'px';
-  if(k=='nl'||k=='nr')s.fontSize=Math.round(b[3]*.62)+'px'}
+ const L=Object.assign({},D,S.lay||{}),H=S.hid||{},ex=S.ex||[];
+ document.querySelectorAll('.xx').forEach(e=>{if(!ex.some(o=>o.k==e.id))e.remove()});
+ ex.forEach(o=>{if(!$(o.k)&&EX[o.t]){const d=document.createElement('div');d.className='pn xx'+(o.t=='diamond'||o.t=='wing'?' gw':'');d.id=o.k;d.innerHTML=EX[o.t];$('stage').appendChild(d)}});
+ Object.keys(D).concat(ex.map(o=>o.k)).forEach(k=>{const el=$(k),b=L[k];if(!el||!Array.isArray(b)||b.length!=4)return;
+  const s=el.style;s.left=b[0]+'px';s.top=b[1]+'px';s.width=b[2]+'px';s.height=b[3]+'px';s.display=H[k]?'none':'';
+  if(k=='nl'||k=='nr')s.fontSize=Math.round(b[3]*.62)+'px'});
  setT('nl',(S.left&&S.left.name)||Q.get('l')||NAMA_KIRI);
  setT('nr',(S.right&&S.right.name)||Q.get('r')||NAMA_KANAN);
 }
