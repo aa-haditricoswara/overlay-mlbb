@@ -127,7 +127,17 @@ ap();
 document.fonts&&document.fonts.ready.then(ap);
 
 /* terima perubahan dari halaman control */
-const es=new EventSource('https://ntfy.sh/'+TOPIC+'/sse?since=12h');
-es.onmessage=e=>{try{const m=JSON.parse(e.data);if(m.event!='message')return;const o=JSON.parse(m.message);
- if(o&&o.left){S=o;try{localStorage.ovlState=m.message}catch(_){}ap()}}catch(_){}};
+let lastId='',bd=null;
+if(Q.get('debug')){bd=document.createElement('div');bd.style.cssText='position:fixed;left:0;top:0;z-index:99;background:#000;color:#0f0;font:20px monospace;padding:6px 10px;white-space:pre';document.body.appendChild(bd)}
+const dbg=t=>{if(bd)bd.textContent=t};
+function got(m){if(!m||m.event!='message'||m.id==lastId)return;
+ try{const o=JSON.parse(m.message);if(o&&o.left){lastId=m.id;S=o;try{localStorage.ovlState=m.message}catch(_){}ap();dbg('data dari control diterima '+new Date().toLocaleTimeString())}}catch(_){}}
+try{const es=new EventSource('https://ntfy.sh/'+TOPIC+'/sse?since=12h');
+ es.onopen=()=>dbg('tersambung, menunggu data dari control');
+ es.onerror=()=>dbg('koneksi ke ntfy.sh bermasalah (mencoba lagi)');
+ es.onmessage=e=>{try{got(JSON.parse(e.data))}catch(_){}}}catch(_){dbg('EventSource tidak didukung, pakai cek berkala')}
+/* cadangan: cek berkala tiap 3 detik, kalau koneksi langsung tertahan */
+async function poll(){try{const r=await fetch('https://ntfy.sh/'+TOPIC+'/json?poll=1&since=12h',{cache:'no-store'});const L=(await r.text()).trim().split('\n');
+ let m=null;for(const l of L){try{const x=JSON.parse(l);if(x.event=='message')m=x}catch(_){}}got(m)}catch(_){dbg('gagal menghubungi ntfy.sh dari overlay')}}
+poll();setInterval(poll,3000);
 </script></body></html>
