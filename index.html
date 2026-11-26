@@ -99,8 +99,9 @@ const D={tb:[216,551,864,48],nl:[282,565,195,30],nr:[603,565,195,30],em:[472,551
 let S={};
 try{S=JSON.parse(localStorage.ovlState)||{}}catch(_){}
 
-function setT(id,t){const el=$(id),s=el.firstChild;s.textContent=t;let f=parseFloat(el.style.fontSize)||20;el.style.fontSize=f+'px';
- while(s.scrollWidth>el.clientWidth*.82&&f>8){f--;el.style.fontSize=f+'px'}}
+function setT(id,t){const el=$(id),s=el.firstChild,m=+((S.fs||{})[id])>0;s.textContent=t;
+ let f=m?+S.fs[id]:(parseFloat(el.style.fontSize)||20);el.style.fontSize=f+'px';
+ if(!m)while(s.scrollWidth>el.clientWidth*.82&&f>8){f--;el.style.fontSize=f+'px'}}
 function ap(){
  const L=Object.assign({},D,S.lay||{});
  for(const k in D){const el=$(k),b=L[k];if(!el||!Array.isArray(b)||b.length!=4)continue;
