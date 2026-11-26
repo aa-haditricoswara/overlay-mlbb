@@ -1,76 +1,49 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="utf-8"><title>Overlay MLBB</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bl:#1d5fd1;--bld:#0c2c70;--rd:#e0243f;--rdd:#6a0c1c;--ink:#0b0f1a;--gd:#ffc83d;--sb:612px;--pl:850px}
+@property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+:root{--nm:612px}
 html,body{margin:0;height:100%;background:transparent;overflow:hidden}
 #stage{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;font-family:'Oswald','Arial Narrow',sans-serif;color:#fff}
-#ov{position:absolute;inset:0;opacity:0;transition:opacity .5s}#ov.on{opacity:1}
-#mm{position:absolute;box-sizing:border-box;border:5px solid #fff;box-shadow:0 0 0 2px rgba(0,0,0,.5)}
-#mm::before,#mm::after{content:"";position:absolute;width:46px;height:9px;background:var(--rd)}
-#mm::before{left:-5px;top:-5px}#mm::after{right:-5px;bottom:-5px}
-#sc{position:absolute;left:50%;top:var(--sb);width:1040px;margin-left:-520px;height:86px;display:flex;transform:translateY(-14px);transition:transform .6s}
-#ov.on #sc{transform:none}
-.sd{flex:1;display:flex;flex-direction:column}
-.top{height:52px;display:flex;align-items:center;gap:16px;padding:0 20px;font:700 22px 'Barlow Condensed',sans-serif}
-.top b{color:var(--gd);font-weight:700}.top em{font:700 42px 'Oswald',sans-serif;font-style:normal;margin-left:auto;min-width:56px;text-align:center}
-.bot{height:34px;background:#f4f6fb;color:#0b0f1a;display:flex;align-items:center;gap:10px;padding:0 14px;font:700 24px 'Oswald',sans-serif;white-space:nowrap}
-.bot u{text-decoration:none;width:28px;height:24px;display:grid;place-items:center;color:#fff;font-size:14px}
-.l .top{background:linear-gradient(90deg,var(--ink),var(--bld));border-bottom:4px solid var(--bl)}.l .bot u{background:var(--bl)}
-.r .top{background:linear-gradient(270deg,var(--ink),var(--rdd));border-bottom:4px solid var(--rd);flex-direction:row-reverse}.r .top em{margin:0 auto 0 0}
-.r .bot{flex-direction:row-reverse}.r .bot u{background:var(--rd)}
-.l{clip-path:polygon(0 0,100% 0,calc(100% - 22px) 100%,0 100%)}.r{clip-path:polygon(22px 0,100% 0,100% 100%,0 100%)}
-.ct{width:170px;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;border-bottom:5px solid var(--gd);z-index:1}
-#tm{font-size:38px;font-weight:700;line-height:1}.ct small{font:600 16px 'Barlow Condensed';letter-spacing:2px;color:var(--gd);margin-top:4px}
-#cap{position:absolute;left:50%;top:calc(var(--sb) + 94px);transform:translateX(-50%);background:var(--rd);padding:3px 26px;font:600 20px 'Barlow Condensed';white-space:nowrap}
-#cap:empty{display:none}
-.col{position:absolute;top:var(--pl);width:200px;display:flex;flex-direction:column;gap:6px}.col.l{left:0}.col.r{right:0}
-.col{clip-path:none}
-.p{height:54px;display:flex;align-items:center;gap:10px;padding:0 10px;background:rgba(11,15,26,.86)}
-.col.l .p{border-left:6px solid var(--bl)}.col.r .p{border-right:6px solid var(--rd);flex-direction:row-reverse;text-align:right}
-.p i{font:700 18px 'Oswald';font-style:normal;width:34px;height:34px;border-radius:50%;border:2px solid var(--gd);display:grid;place-items:center;flex:none}
-.p div{min-width:0;flex:1}.p b{display:block;font:500 19px 'Oswald';white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.p span{font:700 24px 'Barlow Condensed';color:var(--gd)}
+body.bg #stage{background:linear-gradient(#1c2b22,#27402f 60%,#1c2b22)}
+
+/* bingkai utama + kilatan cahaya */
+#fr{position:absolute;border-radius:18px;box-shadow:inset 0 0 28px rgba(255,205,120,.14),0 0 22px rgba(255,205,120,.25)}
+#fr::before,#fr::after{content:"";position:absolute;inset:0;border-radius:18px;padding:5px;
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+#fr::after{background:linear-gradient(135deg,#7a5a22,#f7e6a8 25%,#b08a35 50%,#f7e6a8 75%,#7a5a22)}
+#fr::before{z-index:1;background:conic-gradient(from var(--a),transparent 0 72%,rgba(255,255,255,.15) 80%,#fff 93%,#ffe9a8 96%,transparent 100%);animation:spin 5s linear infinite}
+@keyframes spin{to{--a:360deg}}
+
+/* plakat nama tim */
+.nm{position:absolute;top:var(--nm);width:250px;height:46px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+ font-weight:700;font-size:26px;letter-spacing:2px;white-space:nowrap}
+.nm.l{left:190px;background:linear-gradient(90deg,rgba(10,14,26,.92),rgba(12,44,112,.94));border-bottom:3px solid #3a82ff;clip-path:polygon(0 0,100% 0,calc(100% - 16px) 100%,0 100%)}
+.nm.r{right:190px;background:linear-gradient(270deg,rgba(10,14,26,.92),rgba(106,12,28,.94));border-bottom:3px solid #ff4a62;clip-path:polygon(16px 0,100% 0,100% 100%,0 100%)}
+.nm::after,#mm::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.4) 50%,transparent 65%);transform:translateX(-130%);animation:sh 5s ease-in-out infinite}
+.nm.r::after{animation-delay:.7s}#mm::after{animation-delay:1.4s}
+@keyframes sh{0%,55%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+
+/* bingkai minimap */
+#mm{position:absolute;box-sizing:border-box;overflow:hidden;border:4px solid;border-image:linear-gradient(135deg,#7a5a22,#f7e6a8,#b08a35,#f7e6a8,#7a5a22) 1;box-shadow:0 0 14px rgba(255,205,120,.35)}
 </style></head><body>
-<div id="stage"><div id="ov">
-<div id="mm"></div>
-<div id="sc">
- <div class="sd l"><div class="top"><span>TWR <b id="twL"></b></span><span>$ <b id="gdL"></b></span><em id="kL"></em></div><div class="bot"><u id="lgL"></u><span id="nmL"></span></div></div>
- <div class="ct"><div id="tm">00:00</div><small id="gm"></small></div>
- <div class="sd r"><div class="top"><span>TWR <b id="twR"></b></span><span>$ <b id="gdR"></b></span><em id="kR"></em></div><div class="bot"><u id="lgR"></u><span id="nmR"></span></div></div>
+<div id="stage">
+ <div id="fr"></div>
+ <div id="mm"></div>
+ <div class="nm l" id="nl"></div>
+ <div class="nm r" id="nr"></div>
 </div>
-<div id="cap"></div>
-<div class="col l" id="pl"></div><div class="col r" id="pr"></div>
-</div></div>
 <script>
-const TOPIC="darksystem-mlbb-ganti-ini-7k2q";  /* ganti, SAMA persis dengan di control.html */
-const mk=(p)=>[1,2,3,4,5].map(i=>({n:p+" "+i,k:0,d:0,a:0,lv:1}));
-let S={show:false,t:{base:0,run:false},info:"GAME 1",cap:"",
- left:{name:"DARKSYSTEM",tag:"DS",kills:0,auto:true,tw:0,gold:"0k",p:mk("Player")},
- right:{name:"MUSUH ALLAH",tag:"MA",kills:0,auto:true,tw:0,gold:"0k",p:mk("Musuh")}};
-let A=Date.now()/1000;
-const $=id=>document.getElementById(id),Q=new URLSearchParams(location.search),root=document.documentElement.style;
-const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-let mm=[4,638,174,198];if(Q.get('mm')){const a=Q.get('mm').split(',').map(Number);if(a.length==4&&a.every(n=>!isNaN(n)))mm=a}
-$('mm').style.cssText='left:'+mm[0]+'px;top:'+mm[1]+'px;width:'+mm[2]+'px;height:'+mm[3]+'px';
-if(Q.get('sb'))root.setProperty('--sb',parseFloat(Q.get('sb'))+'px');
-if(Q.get('pl'))root.setProperty('--pl',parseFloat(Q.get('pl'))+'px');
+const NAMA_KIRI="DARKSYSTEM", NAMA_KANAN="MUSUH ALLAH";   /* ganti nama tim di sini */
+const $=id=>document.getElementById(id),Q=new URLSearchParams(location.search);
+$('nl').textContent=Q.get('l')||NAMA_KIRI;$('nr').textContent=Q.get('r')||NAMA_KANAN;
+/* Posisi (kanvas 1080x1920): ?fr=x,y,lebar,tinggi  ?mm=x,y,lebar,tinggi  ?nm=y   ?bg=1 = latar tes */
+function box(id,key,d){let a=d;if(Q.get(key)){const t=Q.get(key).split(',').map(Number);if(t.length==4&&t.every(n=>!isNaN(n)))a=t}
+ $(id).style.cssText+=';left:'+a[0]+'px;top:'+a[1]+'px;width:'+a[2]+'px;height:'+a[3]+'px'}
+box('fr','fr',[0,551,1080,707]);box('mm','mm',[4,638,174,198]);
+if(Q.get('nm'))document.documentElement.style.setProperty('--nm',parseFloat(Q.get('nm'))+'px');
+if(Q.get('bg'))document.body.classList.add('bg');
 function fit(){$('stage').style.transform='scale('+Math.min(innerWidth/1080,innerHeight/1920)+')'}addEventListener('resize',fit);fit();
-const kills=s=>s.auto?s.p.reduce((x,p)=>x+(+p.k||0),0):s.kills;
-const rows=s=>s.p.filter(p=>p.n).map(p=>`<div class="p"><i>${esc(p.lv)}</i><div><b>${esc(p.n)}</b><span>${+p.k||0}/${+p.d||0}/${+p.a||0}</span></div></div>`).join('');
-function render(){
- for(const [k,s] of [['L',S.left],['R',S.right]]){
-  $('nm'+k).textContent=s.name;$('lg'+k).textContent=s.tag;$('k'+k).textContent=kills(s);
-  $('tw'+k).textContent=s.tw;$('gd'+k).textContent=s.gold;$('p'+k.toLowerCase()).innerHTML=rows(s)}
- $('gm').textContent=S.info;$('cap').textContent=S.cap?'\u{1F399} '+S.cap:'';
- $('ov').classList.toggle('on',!!S.show)}
-function set(s,a){S=s;A=a;render()}
-setInterval(()=>{const s=S.t.base+(S.t.run?Math.max(0,Math.floor(Date.now()/1000-A)):0),p=n=>String(n).padStart(2,'0');$('tm').textContent=p(s/60|0)+':'+p(s%60)},250);
-try{const es=new EventSource('https://ntfy.sh/'+TOPIC+'/sse?since=latest');
- es.onmessage=e=>{try{const m=JSON.parse(e.data);if(m.event==='message')set(JSON.parse(m.message),m.time)}catch(_){}}}catch(_){}
-addEventListener('storage',e=>{if(e.key==='ovl'&&e.newValue)try{set(JSON.parse(e.newValue),Date.now()/1000)}catch(_){}});
-render();
-if(/[?&]demo=1/.test(location.search)){S.show=true;S.t={base:958,run:true};S.cap="HOST: BANG BANG";S.left.tw=8;S.left.gold="51.8k";S.right.tw=2;S.right.gold="36.2k";
- S.left.p.forEach((p,i)=>{p.k=i+1;p.d=i;p.a=i*2;p.lv=12+i});S.right.p.forEach((p,i)=>{p.k=i;p.d=i+1;p.a=i+2;p.lv=11+i});render()}
 </script></body></html>
