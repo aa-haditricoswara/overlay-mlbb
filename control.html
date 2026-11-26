@@ -9,9 +9,35 @@ input[type=checkbox]{width:auto}.bar{position:sticky;top:0;background:#10131c;pa
 .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px}.tm{background:#181d2b;padding:10px;border-radius:8px}
 .g{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:4px;margin-top:4px}.h{font-size:12px;opacity:.7}
 .f{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:6px;align-items:end;margin-bottom:6px}#ok{opacity:.7}
+#pv{position:relative;background:#1c2b22;overflow:hidden;touch-action:none;flex:none;border-radius:6px}
+#pv .gd{position:absolute;left:0;right:0;border:1px dashed #ffe14a;opacity:.5;pointer-events:none;box-sizing:border-box}
+#pv .pp{position:absolute;box-sizing:border-box;border:1px dashed #20e0ff;background:rgba(32,224,255,.12);cursor:move;font-size:9px;overflow:hidden}
+#pv .pp.sel{border:2px solid #ffe14a;background:rgba(255,225,74,.18)}
+#pv .pp span{pointer-events:none}
+#pv .pp i{position:absolute;right:0;bottom:0;width:12px;height:12px;background:#20e0ff;cursor:nwse-resize}
+#pb button{padding:6px 9px;font-size:13px}#pb button.on{background:#e3b449;color:#111}
+#nu button{padding:6px 10px;font-size:13px}
+select{font:inherit;padding:6px;background:#1b2030;color:#fff;border:1px solid #445;border-radius:4px}
 </style></head><body>
 <div class="bar"><button id="sh" class="r">TAMPILKAN</button><button id="st">Start timer</button><button id="pa">Pause</button><button id="rs">Reset</button> <b id="tt">00:00</b> <span id="ok"></span></div>
 <div class="f"><label>Label game<input data-p="info"></label><label style="grid-column:span 3">Teks merah (host/caster)<input data-p="cap"></label></div>
+<div class="tm" style="margin-bottom:14px"><b>Atur panel overlay</b>
+ <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px">
+  <div id="pv"></div>
+  <div style="flex:1;min-width:240px">
+   <div id="pb"></div>
+   <p class="h" style="margin:8px 0">Dipilih: <b id="sn"></b>. Geser kotak di pratinjau untuk memindah, tarik kotak biru kanan-bawah untuk ubah ukuran. Garis kuning putus-putus = area game.</p>
+   <div class="g" style="grid-template-columns:repeat(4,1fr)"><span class="h">X</span><span class="h">Y</span><span class="h">Lebar</span><span class="h">Tinggi</span>
+    <input id="ix" type="number"><input id="iy" type="number"><input id="iw" type="number"><input id="ih" type="number"></div>
+   <div id="nu" style="margin-top:8px"><button data-n="-1,0">◀ 1</button><button data-n="1,0">1 ▶</button><button data-n="0,-1">▲ 1</button><button data-n="0,1">▼ 1</button><br>
+    <button data-n="-10,0">◀ 10</button><button data-n="10,0">10 ▶</button><button data-n="0,-10">▲ 10</button><button data-n="0,10">▼ 10</button></div>
+   <label style="display:block;margin-top:10px"><input type="checkbox" id="vis"> Tampilkan panel ini (hilangkan centang untuk menyembunyikan)</label>
+   <button class="r" id="dx" hidden>Hapus ornamen ini</button>
+   <div style="margin-top:8px"><select id="at"><option value="diamond">Ornamen berlian</option><option value="wing">Emblem sayap</option><option value="line">Garis emas</option><option value="hatch">Garis miring</option><option value="slash">Balok emas miring</option><option value="glow">Cahaya cyan</option></select><button id="ad">+ Tambah ornamen</button></div>
+   <div class="g" style="grid-template-columns:1fr 1fr;margin-top:10px"><span class="h">Ukuran huruf nama kiri (0 = otomatis)</span><span class="h">Ukuran huruf nama kanan (0 = otomatis)</span>
+    <input type="number" min="0" data-p="fs.nl"><input type="number" min="0" data-p="fs.nr"></div>
+   <button class="r" id="rl" style="margin-top:8px">Reset posisi panel</button>
+  </div></div></div>
 <div class="cols" id="cols"></div>
 <script>
 const TOPIC="darksystem-mlbb-ganti-ini-7k2q";  /* SAMA persis dengan di index.html */
@@ -20,6 +46,11 @@ let S={show:false,t:{base:0,run:false},info:"GAME 1",cap:"",
  left:{name:"DARKSYSTEM",tag:"DS",kills:0,auto:true,tw:0,gold:"0k",p:mk("Player")},
  right:{name:"MUSUH ALLAH",tag:"MA",kills:0,auto:true,tw:0,gold:"0k",p:mk("Musuh")}};
 try{const o=JSON.parse(localStorage.ctl);if(o&&o.left)S=o}catch(_){}
+const DEF={tb:[216,551,864,48],nl:[282,565,195,30],nr:[603,565,195,30],em:[472,551,136,72],mm:[2,553,215,175],bb:[0,1203,1080,55],eb:[490,1198,100,60]};  /* SAMA dengan D di index.html */
+const LN={tb:'Bar atas',nl:'Nama kiri',nr:'Nama kanan',em:'Emblem atas',mm:'Minimap',bb:'Bar bawah',eb:'Ornamen bawah'};
+S.lay=Object.assign(JSON.parse(JSON.stringify(DEF)),S.lay||{});
+S.fs=Object.assign({nl:0,nr:0},S.fs||{});
+S.hid=S.hid||{};S.ex=S.ex||[];S.ex.forEach(o=>LN[o.k]=o.l);
 let T={base:S.t.base,run:false,at:Date.now()};S.t.run=false;
 const $=id=>document.getElementById(id),cur=()=>T.base+(T.run?(Date.now()-T.at)/1000:0);
 const team=k=>`<div class="tm"><b>${k=='left'?'Tim kiri (biru)':'Tim kanan (merah)'}</b>
@@ -30,7 +61,7 @@ const team=k=>`<div class="tm"><b>${k=='left'?'Tim kiri (biru)':'Tim kanan (mera
 ${[0,1,2,3,4].map(i=>`<div class="g"><input data-p="${k}.p.${i}.n"><input type="number" data-p="${k}.p.${i}.k"><input type="number" data-p="${k}.p.${i}.d"><input type="number" data-p="${k}.p.${i}.a"><input type="number" data-p="${k}.p.${i}.lv"></div>`).join('')}</div>`;
 $('cols').innerHTML=team('left')+team('right');
 const path=(o,p,v)=>{const a=p.split('.'),l=a.pop();for(const x of a)o=o[x];if(v===undefined)return o[l];o[l]=v};
-function fill(){document.querySelectorAll('[data-p]').forEach(e=>{const v=path(S,e.dataset.p);e.type=='checkbox'?e.checked=!!v:e.value=v});$('sh').textContent=S.show?'SEMBUNYIKAN':'TAMPILKAN'}
+function fill(){document.querySelectorAll('[data-p]').forEach(e=>{const v=path(S,e.dataset.p);e.type=='checkbox'?e.checked=!!v:e.value=v});$('sh').textContent=S.show?'SEMBUNYIKAN':'TAMPILKAN';lay()}
 document.addEventListener('input',e=>{const t=e.target;if(!t.dataset.p)return;path(S,t.dataset.p,t.type=='checkbox'?t.checked:t.type=='number'?+t.value:t.value);send()});
 let tm;function send(){clearTimeout(tm);tm=setTimeout(()=>{S.t={base:Math.floor(cur()),run:T.run};const j=JSON.stringify(S);localStorage.ctl=j;localStorage.setItem('ovl',j);
  fetch('https://ntfy.sh/'+TOPIC,{method:'POST',body:j}).then(r=>$('ok').textContent=r.ok?'terkirim':'gagal kirim').catch(()=>$('ok').textContent='gagal kirim, cek internet')},200)}
@@ -39,5 +70,30 @@ $('st').onclick=()=>{if(!T.run){T.base=cur();T.at=Date.now();T.run=true}send()};
 $('pa').onclick=()=>{T.base=cur();T.run=false;send()};
 $('rs').onclick=()=>{T={base:0,run:false,at:Date.now()};send()};
 setInterval(()=>{const s=Math.floor(cur()),p=n=>String(n).padStart(2,'0');$('tt').textContent=p(s/60|0)+':'+p(s%60)},250);
+/* ---- atur panel ---- */
+const K=.3,PV=$('pv');let sel='tb',dr=null;
+PV.style.width=1080*K+'px';PV.style.height=1920*K+'px';
+function build(){PV.innerHTML='<div class="gd" style="top:'+551*K+'px;height:'+707*K+'px"></div>'+Object.keys(LN).map(k=>`<div class="pp" data-k="${k}"><span>${LN[k]}</span><i></i></div>`).join('');
+ $('pb').innerHTML=Object.keys(LN).map(k=>`<button data-k="${k}">${LN[k]}</button>`).join('')}
+build();
+function pvp(k){const e=PV.querySelector(`[data-k="${k}"]`),b=S.lay[k];e.style.left=b[0]*K+'px';e.style.top=b[1]*K+'px';e.style.width=b[2]*K+'px';e.style.height=b[3]*K+'px'}
+function lay(){for(const k in LN){pvp(k);const q=PV.querySelector(`[data-k="${k}"]`);q.classList.toggle('sel',k==sel);q.style.opacity=S.hid[k]?.3:1}
+ document.querySelectorAll('#pb button').forEach(b=>b.classList.toggle('on',b.dataset.k==sel));
+ ['x','y','w','h'].forEach((c,i)=>$('i'+c).value=S.lay[sel][i]);$('sn').textContent=LN[sel];$('vis').checked=!S.hid[sel];$('dx').hidden=!sel.startsWith('x')}
+PV.addEventListener('pointerdown',e=>{const p=e.target.closest('.pp');if(!p)return;e.preventDefault();sel=p.dataset.k;
+ dr={x:e.clientX,y:e.clientY,b:S.lay[sel].slice(),rs:e.target.tagName=='I'};p.setPointerCapture(e.pointerId);lay()});
+PV.addEventListener('pointermove',e=>{if(!dr)return;const dx=(e.clientX-dr.x)/K,dy=(e.clientY-dr.y)/K,b=dr.b.slice();
+ if(dr.rs){b[2]=Math.max(20,Math.round(b[2]+dx));b[3]=Math.max(10,Math.round(b[3]+dy))}else{b[0]=Math.round(b[0]+dx);b[1]=Math.round(b[1]+dy)}
+ S.lay[sel]=b;lay();send()});
+PV.addEventListener('pointerup',()=>dr=null);
+$('pb').onclick=e=>{if(e.target.dataset.k){sel=e.target.dataset.k;lay()}};
+['x','y','w','h'].forEach((c,i)=>$('i'+c).oninput=e=>{S.lay[sel][i]=+e.target.value;pvp(sel);send()});
+$('nu').onclick=e=>{const n=e.target.dataset.n;if(!n)return;const [dx,dy]=n.split(',').map(Number);S.lay[sel][0]+=dx;S.lay[sel][1]+=dy;lay();send()};
+$('rl').onclick=()=>{const o={};S.ex.forEach(x=>o[x.k]=S.lay[x.k]);S.lay=Object.assign(JSON.parse(JSON.stringify(DEF)),o);lay();send()};
+$('vis').onchange=e=>{if(e.target.checked)delete S.hid[sel];else S.hid[sel]=true;lay();send()};
+const TS={diamond:[100,60],wing:[136,72],line:[200,10],hatch:[40,28],slash:[60,30],glow:[40,40]};
+$('ad').onclick=()=>{const t=$('at').value,n=S.ex.reduce((m,o)=>Math.max(m,+o.k.slice(1)),0)+1,k='x'+n,l=$('at').selectedOptions[0].text+' '+n;
+ S.ex.push({k,t,l});LN[k]=l;S.lay[k]=[490,1000,...TS[t]];sel=k;build();lay();send()};
+$('dx').onclick=()=>{if(!sel.startsWith('x'))return;S.ex=S.ex.filter(o=>o.k!=sel);delete S.lay[sel];delete S.hid[sel];delete LN[sel];sel='tb';build();lay();send()};
 fill();
 </script></body></html>
